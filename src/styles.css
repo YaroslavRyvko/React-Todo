@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: "Inter", sans-serif;
+  color: 000;
+  background-color: #f6f6f6;
+  background: linear-gradient(
+    248.66deg,
+    #affa72 0%,
+    rgba(255, 255, 255, 0.46) 43.75%
+  );
+}
+
+.app {
+  max-width: 1280px;
+  padding: 20px 20px 75px;
+  margin: 0 auto;
+}
+
+.logoutBtn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  outline: none;
+  background-color: #F1F1F1;
+}
+
+button {
+  font-weight: 700;
+  cursor: pointer;
+}

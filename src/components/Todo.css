@@ -1,0 +1,75 @@
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 30px;
+  background: #e4ffab;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.todo-item--buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.todo-item--buttons button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.todo-item--buttons button svg {
+  pointer-events: none;
+}
+
+.todo-item--form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.todo-item--form input {
+  border: none;
+  background: #fff;
+  padding: 10px 15px;
+  width: 100%;
+  height: 35px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
+.todo-item--form textarea {
+  border: none;
+  background: #fff;
+  padding: 10px 15px;
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
+.todo-item--form button {
+  border-radius: 20px;
+  height: 45px;
+  border: none;
+  background: green;
+  color: white;
+  cursor: pointer;
+}
+
+.todo-item {
+  cursor: grab;
+  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.todo-item:active {
+  cursor: grabbing;
+}
+
+.todo-item.dragging {
+  opacity: .5;
+  transform: scale(.8);
+}
