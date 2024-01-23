@@ -2,10 +2,10 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
-import TodoList from "./pages/TodoList.js";
-import Signup  from "./pages/SignUp.js";
-import Login from "./pages/Login.js";
-import Profile from "./pages/Profile.js";
+import TodoList from "./pages/Home/TodoList.js";
+import Signup from "./pages/SignUp/SignUp.js";
+import Login from "./pages/Login/Login.js";
+import Profile from "./pages/Profile/Profile.js";
 import "./styles.css";
 
 function App() {
