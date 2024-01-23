@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 75vh;
 }
 
 .profile-section form {
@@ -32,6 +32,16 @@
   position: relative;
 }
 
+.field-row {
+  width: 100%;
+  margin-bottom: 50px;
+}
+
+.field-row .error {
+  color: #e74c3c;
+  margin-top: 10px;
+}
+
 .profile-image img {
   width: 100%;
   object-fit: contain;
@@ -56,7 +66,6 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  margin-bottom: 50px;
 }
 
 .profile-image input {

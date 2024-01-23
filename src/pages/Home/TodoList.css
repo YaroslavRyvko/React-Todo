@@ -32,6 +32,12 @@
   align-items: center;
   max-width: 450px;
   width: 100%;
+  padding: 20px;
+}
+
+.board.drop {
+  border: 1px dotted black;
+  border-radius: 20px;
 }
 
 .board-done .todo-item {

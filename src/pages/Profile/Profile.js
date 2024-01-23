@@ -20,11 +20,24 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [age, setAge] = useState("");
   const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const [emailChanged, setEmailChanged] = useState(false);
+  const [passwordChanged, setPasswordChanged] = useState(false);
 
   const [editStatus, setEditStatus] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    let newErrors = {};
+    if (!name) newErrors.name = "Name is required";
+    if (!email) newErrors.email = "Email is required";
+    if (!password) newErrors.password = "Password is required";
+    if (!age) newErrors.age = "Age is required";
+    return newErrors;
+  };
 
   const navigate = useNavigate();
 
@@ -38,6 +51,8 @@ const Profile = () => {
     });
   }, []);
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
   useEffect(() => {
     const fetchData = async () => {
       const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -48,7 +63,7 @@ const Profile = () => {
         setEmail(userData.email || "");
         setPassword(userData.password || "");
         setAge(userData.age || "");
-        setImageFile(userData.profileImage || "/user.png");
+        setImagePreview(userData.profileImage || "/user.png");
       } else {
         console.log("User not found");
       }
@@ -59,6 +74,13 @@ const Profile = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const formErrors = validateForm();
+
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
     try {
       const userRef = doc(db, "users", user.uid);
       await updateDoc(userRef, {
@@ -66,25 +88,29 @@ const Profile = () => {
         age: age,
       });
 
-      updateEmail(user, email)
-        .then(() => {
-          updateDoc(userRef, {
-            email: email,
+      if (emailChanged) {
+        updateEmail(user, email)
+          .then(() => {
+            updateDoc(userRef, {
+              email: email,
+            });
+          })
+          .catch((error) => {
+            console.log(error);
           });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      }
 
-      updatePassword(user, password)
-        .then(() => {
-          updateDoc(userRef, {
-            password: password,
+      if (passwordChanged) {
+        updatePassword(user, password)
+          .then(() => {
+            updateDoc(userRef, {
+              password: password,
+            });
+          })
+          .catch((error) => {
+            console.log(error);
           });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      }
 
       if (imageFile) {
         const storageRef = ref(storage, `profileImages/${user.uid}`);
@@ -103,6 +129,14 @@ const Profile = () => {
     }
   };
 
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+      setImagePreview(URL.createObjectURL(e.target.files[0]));
+      setEditStatus(false);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -117,38 +151,53 @@ const Profile = () => {
               <EditIcon />
             </div>
             {editStatus ? (
-              <input
-                type="file"
-                onChange={(e) => setImageFile(e.target.files[0])}
-              />
+              <input type="file" onChange={handleImageChange} />
             ) : (
-              <img src={imageFile} alt="test" />
+              <img src={imagePreview} alt="test" />
             )}
           </div>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            type="text"
-            placeholder="Name"
-          />
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type="text"
-            placeholder="Email"
-          />
-          <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            type="text"
-            placeholder="Password"
-          />
-          <input
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            type="text"
-            placeholder="Age"
-          />
+          <div className="field-row">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              type="text"
+              placeholder="Name"
+            />
+            {errors.name && <p className="error">{errors.name}</p>}
+          </div>
+          <div className="field-row">
+            <input
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailChanged(true);
+              }}
+              type="text"
+              placeholder="Email"
+            />
+            {errors.email && <p className="error">{errors.email}</p>}
+          </div>
+          <div className="field-row">
+            <input
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setPasswordChanged(true);
+              }}
+              type="text"
+              placeholder="Password"
+            />
+            {errors.password && <p className="error">{errors.password}</p>}
+          </div>
+          <div className="field-row">
+            <input
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              type="text"
+              placeholder="Age"
+            />
+            {errors.age && <p className="error">{errors.age}</p>}
+          </div>
           <button type="submit">Edit</button>
         </form>
       </section>
