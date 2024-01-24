@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { db, auth } from "../../firebase";
-import { doc, setDoc } from "firebase/firestore"; 
+import { useNavigate, NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { signUpUser } from '../../features/userSlice';
 
 //Styles
 import "./SignUp.css";
 
 const Signup = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -18,25 +18,15 @@ const Signup = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        localStorage.setItem("user", JSON.stringify(user));
-        
-        setDoc(doc(db, "users", user.uid), {
-          id: user.uid,
-          email: email,
-          password: password,
-          name: name,
-          age: age,
-        });
-
-        navigate("/");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+    dispatch(signUpUser({ email, password, name, age }))
+      .then((action) => {
+        if (signUpUser.fulfilled.match(action)) {
+          localStorage.setItem('user', JSON.stringify(action.payload));
+          navigate('/');
+        }
+        if (signUpUser.rejected.match(action)) {
+          console.log(action.payload); // Error message
+        }
       });
   };
 

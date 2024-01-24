@@ -1,28 +1,27 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
 import { NavLink, useNavigate } from "react-router-dom";
-
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../features/userSlice';
 //Styles
 import "./Login.css";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const onLogin = (e) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        localStorage.setItem("user", JSON.stringify(user));
-        navigate("/");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+    dispatch(loginUser({ email, password }))
+      .then((action) => {
+        if (loginUser.fulfilled.match(action)) {
+          localStorage.setItem('user', JSON.stringify(action.payload));
+          navigate('/');
+        }
+        if (loginUser.rejected.match(action)) {
+          console.log(action.payload); // Error message
+        }
       });
   };
 

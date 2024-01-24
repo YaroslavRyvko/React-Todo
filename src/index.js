@@ -2,6 +2,8 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from './store'; 
 import TodoList from "./pages/Home/TodoList.js";
 import Signup from "./pages/SignUp/SignUp.js";
 import Login from "./pages/Login/Login.js";
@@ -10,16 +12,18 @@ import "./styles.css";
 
 function App() {
   return (
-    <div className="app">
-      <Router>
-        <Routes>
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/" element={<TodoList />} />
-        </Routes>
-      </Router>
-    </div>
+    <Provider store={store}>
+      <div className="app">
+        <Router>
+          <Routes>
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/" element={<TodoList />} />
+          </Routes>
+        </Router>
+      </div>
+    </Provider>
   );
 }
 
